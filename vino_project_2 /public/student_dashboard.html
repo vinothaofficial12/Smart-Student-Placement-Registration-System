@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Student Dashboard</title>
+<link rel="stylesheet" href="student.css">
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+    <h2>Student Dashboard</h2>
+    <button onclick="logout()">Logout</button>
+</div>
+
+<hr>
+
+<!-- PROFILE -->
+<div id="profile"></div>
+
+<br>
+
+<button onclick="openPopup()">Update Profile</button>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay"></div>
+
+<!-- POPUP -->
+<div id="popup">
+
+<h3>Edit Profile</h3>
+
+<input id="name" placeholder="Name">
+<input id="email" placeholder="Email">
+<input id="phone" placeholder="Phone">
+<input id="college" placeholder="College">
+<input id="degree" placeholder="Degree">
+<input id="skills" placeholder="Skills">
+<input id="cgpa" placeholder="CGPA">
+<input id="year" placeholder="Year">
+
+<!-- FILE UPLOAD -->
+<div class="file-upload">
+    <input type="file" id="resume">
+    <label for="resume">📄 Upload Resume</label>
+    <span id="file-name">No file chosen</span>
+</div>
+
+<button onclick="updateProfile()">Save</button>
+<button onclick="closePopup()">Cancel</button>
+
+</div>
+
+<script>
+
+/* FILE NAME */
+document.getElementById("resume").addEventListener("change", function() {
+    const fileName = this.files[0]?.name || "No file chosen";
+    document.getElementById("file-name").textContent = fileName;
+});
+
+/* GET STUDENT */
+let student = JSON.parse(localStorage.getItem("student"));
+
+if(!student){
+alert("Please login first");
+window.location.href="login.html";
+}
+
+/* LOAD PROFILE */
+function loadProfile(){
+document.getElementById("profile").innerHTML = `
+<div class="profile-card">
+
+<h3>👤 Profile</h3>
+
+<p><b>Name:</b> ${student.name}</p>
+<p><b>Email:</b> ${student.email}</p>
+<p><b>Phone:</b> ${student.phone}</p>
+<p><b>College:</b> ${student.college}</p>
+<p><b>Degree:</b> ${student.degree}</p>
+<p><b>Skills:</b> ${student.skills}</p>
+<p><b>CGPA:</b> ${student.cgpa}</p>
+<p><b>Year:</b> ${student.graduation_year}</p>
+
+<p><b>Resume:</b><br>
+${student.resume 
+? `<a href="/uploads/resumes/${student.resume}" target="_blank">View Resume</a>` 
+: "No Resume Uploaded"}
+</p>
+
+<br>
+
+<button onclick="deleteResume()">Delete Resume</button>
+
+</div>
+`;
+}
+
+/* POPUP */
+function openPopup(){
+document.getElementById("popup").style.display = "block";
+document.getElementById("overlay").style.display = "block";
+
+document.getElementById("name").value = student.name || "";
+document.getElementById("email").value = student.email || "";
+document.getElementById("phone").value = student.phone || "";
+document.getElementById("college").value = student.college || "";
+document.getElementById("degree").value = student.degree || "";
+document.getElementById("skills").value = student.skills || "";
+document.getElementById("cgpa").value = student.cgpa || "";
+document.getElementById("year").value = student.graduation_year || "";
+}
+
+function closePopup(){
+document.getElementById("popup").style.display = "none";
+document.getElementById("overlay").style.display = "none";
+}
+
+/* UPDATE PROFILE */
+function updateProfile(){
+
+const fileInput = document.getElementById("resume");
+
+if(fileInput.files[0]){
+
+const formData = new FormData();
+
+formData.append("name", name.value);
+formData.append("email", email.value);
+formData.append("phone", phone.value);
+formData.append("college", college.value);
+formData.append("degree", degree.value);
+formData.append("skills", skills.value);
+formData.append("cgpa", cgpa.value);
+formData.append("graduation_year", year.value);
+formData.append("resume", fileInput.files[0]);
+
+fetch(`/api/students/update-with-resume/${student.id}`,{
+method:"PUT",
+body:formData
+})
+.then(res=>res.json())
+.then(data=>{
+alert(data.message);
+student = {...student, ...data.student};
+localStorage.setItem("student", JSON.stringify(student));
+loadProfile();
+closePopup();
+});
+
+}else{
+
+const updatedData = {
+name:name.value,
+email:email.value,
+phone:phone.value,
+college:college.value,
+degree:degree.value,
+skills:skills.value,
+cgpa:cgpa.value,
+graduation_year:year.value
+};
+
+fetch(`/api/students/update/${student.id}`,{
+method:"PUT",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify(updatedData)
+})
+.then(res=>res.json())
+.then(data=>{
+alert(data.message);
+student = {...student, ...updatedData};
+localStorage.setItem("student", JSON.stringify(student));
+loadProfile();
+closePopup();
+});
+
+}
+
+}
+
+/* DELETE RESUME */
+function deleteResume(){
+fetch(`/api/students/delete-resume/${student.id}`,{
+method:"DELETE"
+})
+.then(res=>res.json())
+.then(data=>{
+alert(data.message);
+student.resume = null;
+localStorage.setItem("student", JSON.stringify(student));
+loadProfile();
+});
+}
+
+/* LOGOUT */
+function logout(){
+localStorage.removeItem("student");
+window.location.href="login.html";
+}
+
+/* INIT */
+loadProfile();
+
+</script>
+
+</body>
+</html>

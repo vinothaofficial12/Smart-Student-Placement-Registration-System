@@ -1,0 +1,192 @@
+/* Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* BODY */
+body {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    padding: 20px;
+    color: white;
+
+    /*  BACKGROUND IMAGE + OVERLAY */
+    background:
+        linear-gradient(rgba(10, 20, 30, 0.75), rgba(10, 20, 30, 0.75)),
+        url('/images/admin.jpg'); 
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    animation: bgZoom 20s ease-in-out infinite alternate;
+}
+
+/*  Zoom animation */
+@keyframes bgZoom {
+    0% { background-size: 100%; }
+    100% { background-size: 110%; }
+}
+
+/* Glow effects */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    z-index: 0;
+}
+
+body::before {
+    width: 300px;
+    height: 300px;
+    background: rgba(0, 198, 255, 0.5);
+    top: -80px;
+    left: -80px;
+    animation: float 6s ease-in-out infinite;
+}
+
+body::after {
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 0, 204, 0.5);
+    bottom: -80px;
+    right: -80px;
+    animation: float 8s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-30px); }
+}
+
+/* HEADER */
+.header {
+    margin-left:35%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    position: relative;
+    z-index: 1;
+    font-size: 28px;
+}
+
+.header h2 {
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+/* BUTTON */
+button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 10px;
+
+    background: linear-gradient(45deg, #00c6ff, #0072ff);
+    color: white;
+
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 114, 255, 0.7);
+}
+
+/* INPUT */
+input {
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: none;
+    margin-right: 10px;
+
+    background: rgba(255,255,255,0.08);
+    color: white;
+
+    outline: none;
+    transition: 0.3s;
+}
+
+input::placeholder {
+    color: #aaa;
+}
+
+input:hover {
+    background: rgba(255,255,255,0.15);
+}
+
+input:focus {
+    box-shadow: 0 0 10px #00c6ff;
+    background: rgba(255,255,255,0.15);
+}
+
+/* CONTROLS */
+.controls {
+    margin-left: 40%;
+    margin-bottom: 25px;
+    position: relative;
+    z-index: 1;
+}
+
+/* STUDENT CARD */
+.card {
+    position: relative;
+    z-index: 1;
+
+    background: rgba(0, 0, 0, 0.45);
+    padding: 22px;
+    border-radius: 18px;
+    margin-bottom: 20px;
+
+    backdrop-filter: blur(20px);
+
+    box-shadow:
+        0 15px 50px rgba(0,0,0,0.7),
+        inset 0 0 15px rgba(255,255,255,0.05);
+
+    transition: 0.4s ease;
+}
+
+/* Hover effect */
+.card:hover {
+    transform: perspective(1000px) rotateX(4deg) rotateY(-4deg) scale(1.02);
+}
+
+/* TEXT */
+.card p {
+    margin: 8px 0;
+    font-size: 14px;
+    color: #ddd;
+}
+
+/* Resume link */
+.card a {
+    color: #00c6ff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.card a:hover {
+    text-decoration: underline;
+}
+
+/* Highlight */
+.card b {
+    color: #00c6ff;
+}
+
+/* Divider */
+hr {
+    border: none;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+    margin: 20px 0;
+}

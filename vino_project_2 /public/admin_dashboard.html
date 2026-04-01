@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Dashboard</title>
+<link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+<div class="header">
+    <h2>Admin Dashboard</h2>
+    <button onclick="logout()">Logout</button>
+</div>
+<hr>
+<div class="controls">
+<button onclick="loadStudents()">View All Students</button>
+
+<br><br>
+
+<input type="text" id="skill">
+<button onclick="filterSkill()">Filter by Skill</button>
+
+<br><br>
+
+<button onclick="eligible()">Show Interview Eligible</button>
+</div>
+<hr>
+
+<div id="result"></div>
+
+<script>
+
+function loadStudents(){
+
+fetch("/api/students/all")
+.then(res=>res.json())
+.then(data=>display(data));
+
+}
+
+function filterSkill(){
+
+const skill=document.getElementById("skill").value;
+
+fetch(`/api/students/skill/${skill}`)
+.then(res=>res.json())
+.then(data=>display(data));
+
+}
+
+function eligible(){
+
+fetch("/api/admin/eligible")
+.then(res=>res.json())
+.then(data=>display(data));
+
+}
+
+function display(data){
+
+let html="";
+
+data.forEach(s=>{
+
+html += `
+<div class="card">
+
+<h3>${s.name}</h3>
+
+<p><b>ID:</b> ${s.id}</p>
+<p><b>Email:</b> ${s.email}</p>
+<p><b>College:</b> ${s.college}</p>
+<p><b>Skills:</b> ${s.skills}</p>
+<p><b>CGPA:</b> ${s.cgpa}</p>
+
+<p><b>Resume:</b><br>
+${s.resume 
+? `<a href="/uploads/resumes/${s.resume}" target="_blank">View Resume</a>` 
+: "No Resume"}
+</p>
+
+<button onclick="callLetter(${s.id})">Generate Call Letter</button>
+
+</div>
+`;
+
+});
+
+document.getElementById("result").innerHTML=html;
+
+}
+
+function callLetter(id){
+
+window.open(`/api/admin/callletter/${id}`);
+
+}
+
+function logout(){
+
+window.location.href="login.html";
+
+}
+
+</script>
+
+</body>
+</html>
